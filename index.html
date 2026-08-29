@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VANTEXA — Professional Trading Tools</title>
+<link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+<div class="noise"></div>
+<header class="topbar">
+  <div class="brand" data-go="home"><div class="logo">V</div><div><b>VANTEXA</b><span>أدوات تداول احترافية</span></div></div>
+  <nav>
+    <button data-go="home">الرئيسية</button><button data-go="store">المتجر</button><button data-go="how">كيف يعمل</button><button data-go="reviews">التقييمات</button><button data-go="support">الدعم</button>
+  </nav>
+  <div class="header-actions"><select id="languageSelect" class="language-select" aria-label="Language"><option value="en">English</option><option value="ar">العربية</option><option value="fr">Français</option><option value="es">Español</option><option value="tr">Türkçe</option></select><button class="ghost" data-go="account">الحساب</button><button class="cart-btn" id="cartBtn">السلة <span id="cartCount">0</span></button></div>
+</header>
+
+<main id="app">
+<section class="page active" id="page-home">
+  <div class="vhero">
+    <div class="vhero-copy">
+      <div class="vbrandword">VANTEXA</div>
+      <h1>أدوات تداول احترافية<br><em>لنتائج استثنائية</em></h1>
+      <p>بوتات ومؤشرات احترافية للمتداولين الباحثين عن أدوات واضحة، ترخيص منظم، ودعم حقيقي.</p>
+      <div class="vbadges"><span>🛡️ دفع وحماية</span><span>🎧 دعم فني</span><span>⚡ تحديثات</span><span>🏆 جودة موثوقة</span></div>
+      <div class="cta-row"><button class="primary" data-go="store">استكشف المنتجات</button><button class="secondary" data-go="support">تواصل مع الدعم</button></div>
+    </div>
+    <div class="vhero-visual"><img src="assets/approved-vantexa-reference.png" alt="VANTEXA trading tools"></div>
+    <aside class="vtrust"><div><b>🛡️ آمن</b><span>دفع وحماية منظمة</span></div><div><b>👥 متجر متخصص</b><span>منتجات تتم مراجعتها</span></div><div><b>🏆 جودة</b><span>لا ننشر المنتج قبل فحصه</span></div><div><b>◷ دعم</b><span>مركز مساعدة للعملاء</span></div></aside>
+  </div>
+  <h2 class="home-title">تصنيفات المنتجات</h2>
+  <div class="cat-grid"><button data-go="store">🤖<b>بوتات التداول</b><span>Expert Advisors</span></button><button data-go="store">📈<b>المؤشرات</b><span>Indicators</span></button><button data-go="store">▦<b>إكسبرتات مخصصة</b><span>Custom EAs</span></button><button data-go="store">🎓<b>أدوات تعليمية</b><span>Guides</span></button><button data-go="support">🛠️<b>أدوات مساعدة</b><span>Tools</span></button><button data-go="account">📄<b>التراخيص</b><span>Licenses</span></button></div>
+  <h2 class="home-title">منتجات مميزة</h2>
+  <div class="preview-products real-preview"><article><div class="preview-art p1"></div><b>Sniper Real Predictor</b><span>EURUSD M1 • MT5 • 29 USDT</span></article><article><div class="preview-art p2"></div><b>Pocket Sniper PRO</b><span>Signal Tool • 19 USDT</span></article><article><div class="preview-art p3"></div><b>Super Signal Ultra</b><span>TradingView • 24 USDT</span></article><article><div class="preview-art p4"></div><b>Zero-Loss Manager</b><span>MT5 • 29 USDT</span></article></div>
+  <div class="home-note">منتجات VANTEXA معروضة بمواصفاتها الفنية المتاحة. نتائج التداول ليست ضمانًا للربح.</div>
+</section>
+
+<section class="page" id="page-store">
+  <div class="section-head"><div><span class="eyebrow">STORE</span><h2>متجر VANTEXA</h2><p>منتجات التداول المتاحة حاليًا مع تقييم VANTEXA الفني ومواصفات كل أداة.</p></div><div class="filters"><input id="searchInput" placeholder="ابحث عن منتج..."/><select><option>كل المنصات</option><option>MT5</option></select><select><option>كل الفريمات</option><option>M1</option><option>H1</option></select></div></div>
+  <div class="product-grid real-products">
+    <article class="product-card"><div class="thumb prod-img" style="background-image:url(assets/covers/indicator1.png)"><span class="badge">MT5 • M1</span></div><div class="pc-body"><div class="chips"><span>EURUSD</span><span>Indicator</span></div><h3>Sniper Real Predictor</h3><p>EMA 5/8 + RSI + ADX + ATR، إشارات على الشمعة المغلقة وتنبيهات للهاتف.</p><div class="rating">★★★★☆ <small>VANTEXA 8.0/10</small></div><div class="price-row"><b>1 USDT <small>اختبار الشراء</small></b><button class="secondary" data-go="product" data-product="sniper-real">التفاصيل</button></div></div></article>
+    <article class="product-card"><div class="thumb prod-img" style="background-image:url(assets/covers/indicator2.png)"><span class="badge">SIGNAL TOOL</span></div><div class="pc-body"><div class="chips"><span>Pocket Option</span><span>Manual</span></div><h3>Pocket Sniper PRO</h3><p>أداة إشارات للتنفيذ اليدوي مع فلترة اتجاه؛ لا تدّعي تنفيذًا آليًا على Pocket Option.</p><div class="rating">★★★★☆ <small>VANTEXA 7.5/10</small></div><div class="price-row"><b>19 USDT</b><button class="secondary" data-go="product" data-product="pocket-sniper">التفاصيل</button></div></div></article>
+    <article class="product-card"><div class="thumb prod-img" style="background-image:url(assets/covers/indicator3.png)"><span class="badge">TRADINGVIEW</span></div><div class="pc-body"><div class="chips"><span>Pine</span><span>Signals</span></div><h3>Super Signal Ultra</h3><p>منطق إشارات مع Reversal Logic للاستخدام والتحليل على TradingView.</p><div class="rating">★★★★☆ <small>VANTEXA 7.0/10</small></div><div class="price-row"><b>24 USDT</b><button class="secondary" data-go="product" data-product="super-signal">التفاصيل</button></div></div></article>
+    <article class="product-card"><div class="thumb prod-img" style="background-image:url(assets/covers/bot_iron.png)"><span class="badge">MT5 BOT</span></div><div class="pc-body"><div class="chips"><span>EX5</span><span>Manager</span></div><h3>Zero-Loss Manager</h3><p>مدير صفقات MT5 لتنظيم الخروج وإدارة الصفقات وفق إعدادات واضحة، بواجهة بسيطة مناسبة للتشغيل المستمر.</p><div class="rating">★★★★☆ <small>VANTEXA 7.0/10</small></div><div class="price-row"><b>29 USDT</b><button class="secondary" data-go="product" data-product="zero-loss">التفاصيل</button></div></div></article>
+    <article class="product-card"><div class="thumb prod-img" style="background-image:url(assets/covers/indicator4.png)"><span class="badge">MT5</span></div><div class="pc-body"><div class="chips"><span>Signal</span><span>Indicator</span></div><h3>Sniper True Signal</h3><p>مؤشر MT5 يعرض إشارات شراء وبيع مباشرة على الشارت لمساعدة المتداول على التقاط فرص الدخول بسرعة.</p><div class="rating">★★★☆☆ <small>VANTEXA 6.5/10</small></div><div class="price-row"><b>19 USDT</b><button class="secondary" data-go="product" data-product="true-signal">التفاصيل</button></div></div></article>
+    <article class="product-card"><div class="thumb prod-img" style="background-image:url(assets/covers/indicator5.png)"><span class="badge">MT5</span></div><div class="pc-body"><div class="chips"><span>Timing</span><span>Indicator</span></div><h3>Sniper Time Predictor</h3><p>مؤشر توقيت MT5 يساعد على تحديد لحظة الدخول المناسبة ويعرض الإشارة بصريًا على الشارت مع تنبيهات.</p><div class="rating">★★★☆☆ <small>VANTEXA 6.0/10</small></div><div class="price-row"><b>24 USDT</b><button class="secondary" data-go="product" data-product="time-predictor">التفاصيل</button></div></div></article>
+  </div>
+</section>
+
+<section class="page" id="page-product">
+  <div class="product-layout">
+    <div class="gallery">
+      <div id="productCover" class="product-cover p1"><span id="productCoverBadge" class="badge">MT5 • M1</span></div>
+      <div class="product-media-row">
+        <div class="media-slot"><b>فيديو المنتج</b><span>يظهر هنا عند رفع الفيديو الحقيقي من لوحة الإدارة</span></div>
+        <div class="media-slot"><b>لقطات المنصة</b><span>صور MT5 / TradingView الخاصة بالمنتج</span></div>
+        <div class="media-slot"><b>نتائج الفحص</b><span>ملخص الاختبار الفني المتاح</span></div>
+      </div>
+    </div>
+    <div class="product-info">
+      <span class="eyebrow" id="productType">MT5 INDICATOR</span>
+      <h2 id="productName">Sniper Real Predictor</h2>
+      <div class="rating" id="productRating">★★★★☆ <small>VANTEXA 8.0/10</small></div>
+      <p id="productDesc"></p>
+      <div class="specs">
+        <div><span>المنصة</span><b id="productPlatform">MT5</b></div>
+        <div><span>الزوج / السوق</span><b id="productMarket">EURUSD</b></div>
+        <div><span>الفريم</span><b id="productTf">M1</b></div>
+        <div><span>طريقة الاستخدام</span><b id="productUse">إشارات يدوية</b></div>
+      </div>
+      <div class="price-big"><span id="productPrice">29</span> <small>USDT</small></div>
+      <div class="cta-row"><button class="primary" id="addProduct">أضف للسلة</button><button class="secondary" data-go="support">اسأل VANTEXA AI</button></div>
+      <div class="risk">ملاحظة: استخدم إدارة رأس مال مناسبة؛ أداء أدوات التداول يتغير حسب ظروف السوق والإعدادات.</div>
+    </div>
+  </div>
+  <div class="tabs"><button class="active" data-tab="desc">الشرح</button><button data-tab="how">طريقة العمل</button><button data-tab="features">المميزات</button><button data-tab="settings">الإعدادات</button><button data-tab="install">التركيب</button><button data-tab="test">تقييم VANTEXA</button></div>
+  <div class="tab-panel" id="productTabPanel"></div>
+</section>
+
+<section class="page" id="page-how">
+  <div class="section-head"><div><span class="eyebrow">HOW IT WORKS</span><h2>كيف تتم عملية الشراء؟</h2></div></div>
+  <div class="steps"><div><b>01</b><h3>اختر المنتج</h3><p>شاهد التفاصيل والفيديو والتقييم والمواصفات.</p></div><div><b>02</b><h3>أكمل الطلب</h3><p>أدخل بريدك وبيانات الطلب.</p></div><div><b>03</b><h3>ادفع</h3><p>USDT TRC20 أو Binance Pay.</p></div><div><b>04</b><h3>استلم</h3><p>بعد تأكيد الدفع يظهر التنزيل والترخيص داخل الحساب.</p></div></div>
+</section>
+
+<section class="page" id="page-checkout">
+  <div class="checkout-grid"><div class="panel"><span class="eyebrow">CHECKOUT</span><h2>إتمام الطلب</h2><label>الاسم<input id="coName" placeholder="Your name"/></label><label>البريد الإلكتروني<input id="coEmail" placeholder="you@example.com"/></label><label>ملاحظات<textarea placeholder="اختياري"></textarea></label><button class="primary wide" id="toPayment">متابعة إلى الدفع</button></div><div class="panel order"><h3>ملخص الطلب</h3><div class="order-item"><div class="mini-thumb" id="checkoutThumb">V</div><div><b id="checkoutName">Sniper Real Predictor</b><span id="checkoutMeta">MT5 — EURUSD M1</span></div><b id="checkoutItemPrice">29 USDT</b></div><div class="line"><span>السعر</span><b id="checkoutPrice">29 USDT</b></div><div class="line"><span>الرسوم</span><b>0</b></div><div class="line total"><span>الإجمالي</span><b id="checkoutTotal">29 USDT</b></div><small id="orderNote">سيتم إنشاء رقم طلب آمن قبل الانتقال إلى الدفع.</small></div></div>
+</section>
+
+<section class="page" id="page-payment">
+  <div class="payment-wrap">
+    <div class="section-head"><div><span class="eyebrow">SECURE PAYMENT</span><h2>إتمام الدفع</h2><p>اختر وسيلة الدفع المناسبة وأكمل التحويل بالمبلغ الظاهر في الطلب.</p></div></div>
+    <div class="pay-grid">
+      <button class="pay-card active" data-pay="usdt"><b>USDT</b><span>TRC20</span><small>دفع مباشر بالمحفظة</small></button>
+      <button class="pay-card" data-pay="binance"><b>Binance Pay</b><span>QR</span><small>امسح الرمز من تطبيق Binance</small></button>
+    </div>
+    <div class="panel pay-box" id="usdtBox">
+      <div class="payment-head"><div><span class="pay-kicker">USDT • TRC20</span><h3>ادفع عبر شبكة TRON</h3></div><div class="amount">1.0000 USDT</div></div>
+      <div class="payment-content">
+        <div class="qr-card"><img class="qr-image" src="assets/payment/usdt_trc20_qr.png" alt="رمز QR لمحفظة USDT TRC20"><span>امسح الرمز بالمحفظة</span></div>
+        <div class="pay-details">
+          <label>عنوان المحفظة<div class="copybox"><code>TFqfLD7Lz5jbGbrsFiXkZVzjkRUWxYgJzq</code><button id="copyWallet" type="button">نسخ</button></div></label>
+          <div class="network-note"><b>الشبكة:</b> TRC20 فقط</div>
+          <label>رقم المعاملة TXID<input id="txid" placeholder="ألصق رقم TXID بعد إرسال الدفع"/></label>
+          <button class="primary wide" id="verifyPayment" type="button">تحقق من الدفع</button>
+          <div class="pay-status" id="usdtStatus">بانتظار الدفع</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel pay-box hidden" id="binanceBox">
+      <div class="payment-head"><div><span class="pay-kicker">BINANCE PAY</span><h3>ادفع عبر Binance</h3></div><div class="amount" id="binanceAmount">1.0000 USDT</div></div>
+      <div class="payment-content">
+        <div class="qr-card"><img class="qr-image" src="assets/payment/binance_pay_qr.png" alt="رمز QR لـ Binance Pay"><span>افتح Binance ثم امسح الرمز</span></div>
+        <div class="pay-details">
+          <div class="steps-mini"><b>1</b><span>افتح تطبيق Binance</span></div>
+          <div class="steps-mini"><b>2</b><span>اختر Scan / المسح</span></div>
+          <div class="steps-mini"><b>3</b><span>امسح QR وأرسل المبلغ الظاهر</span></div>
+          <button class="secondary wide" id="binancePaid" type="button">تم إرسال الدفع</button>
+          <div class="pay-status" id="binanceStatus">بانتظار الدفع</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="page-success">
+  <div class="success-card"><div class="check">✓</div><span class="eyebrow">PAYMENT CONFIRMED</span><h2>تم تأكيد طلبك</h2><p>تم التحقق من الدفع ويمكنك تنزيل المنتج من حسابك.</p><div class="license"><span>License Key</span><code>—</code></div><button class="primary" id="secureDownload">تنزيل المنتج</button><button class="secondary" data-go="account">عرض الطلب داخل حسابي</button></div>
+</section>
+
+<section class="page" id="page-account">
+  <div class="section-head"><div><span class="eyebrow">MY ACCOUNT</span><h2>حساب العميل</h2><p>المشتريات والتنزيلات والتراخيص والتحديثات في مكان واحد.</p></div></div><div class="account-grid"><div class="panel profile"><div class="avatar">V</div><h3>VANTEXA Customer</h3><span id="accountEmail">Sign in to view purchases</span><button class="secondary wide">تعديل البيانات</button></div><div class="panel orders"><h3>طلباتي</h3><div id="accountOrders"><div class="empty">سجل الدخول لعرض الطلبات والتراخيص.</div></div><h3 class="mt">التراخيص</h3><div id="accountLicenses"><div class="empty">تظهر التراخيص هنا بعد تأكيد الدفع.</div></div></div></div>
+</section>
+
+<section class="page" id="page-reviews">
+  <div class="section-head"><div><span class="eyebrow">REVIEWS</span><h2>تقييمات المشترين</h2><p>التقييمات متاحة للمشترين الموثقين فقط.</p></div></div><div class="reviews"><div class="review"><h3>Verified Buyer Reviews</h3><p>تظهر تقييمات المشترين الموثقين هنا بعد اكتمال الطلبات الفعلية.</p></div><div class="review muted"><h3>التقييم التقني ≠ تقييم المشترين</h3><p>VANTEXA يمكنه إعطاء تقييم تقني للمنتج بناءً على الكود والاستراتيجية والمخاطر والاختبارات، ويظهر منفصلًا بوضوح.</p></div></div>
+</section>
+
+<section class="page" id="page-support">
+  <div class="support-grid"><div class="panel"><span class="eyebrow">VANTEXA AI</span><h2>مساعد العملاء</h2><p>مركز مساعدة VANTEXA للأسئلة المتعلقة بالمنتجات والدفع والطلبات والتنزيل والترخيص.</p><div class="chat" id="chat"><div class="msg bot">مرحبًا 👋 أنا مساعد VANTEXA. اسألني عن الدفع، الطلبات، التنزيل، الترخيص، التثبيت، المنتجات أو الاسترجاع.</div></div><div class="chat-input"><input id="chatInput" placeholder="اكتب سؤالك..."/><button class="primary" id="chatSend">إرسال</button></div></div><div class="panel support-options"><h3>قنوات الدعم</h3><div class="support-card"><b>VANTEXA AI</b><span>إجابات فورية من معلومات المتجر فقط</span></div><div class="support-card"><b>Telegram Support</b><span>يُربط بالحساب الرسمي عند الإطلاق</span></div><div class="support-card"><b>Email Support</b><span>يرسل تفاصيل الطلب والمشكلة</span></div><div class="support-card"><b>تذكرة دعم</b><span>مرتبطة بالطلب والمنتج</span></div></div></div>
+</section>
+</main>
+
+<footer><div class="brand"><div class="logo">V</div><div><b>VANTEXA</b><span>Smart Trading Tools</span></div></div><p>منصة لعرض وبيع أدوات تداول رقمية بعد مراجعتها واعتمادها.</p><div><button data-go="store">المتجر</button><button data-go="support">الدعم</button><button data-go="how">طريقة الشراء</button></div><small>© 2026 VANTEXA — التداول ينطوي على مخاطر. الأداء السابق لا يضمن النتائج المستقبلية.</small></footer>
+
+<div class="drawer" id="cartDrawer"><div class="drawer-head"><h3>سلة المشتريات</h3><button id="closeCart">✕</button></div><div id="cartContent"><div class="empty">السلة فارغة</div></div></div><div class="overlay" id="overlay"></div>
+<button class="ai-fab" data-go="support">AI</button>
+<script src="assets/app.js"></script>
+<script src="assets/i18n.js"></script>
+</body>
+</html>

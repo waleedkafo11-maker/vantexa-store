@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VANTEXA Admin — Private</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.admin-shell{max-width:1180px;margin:42px auto;padding:0 22px}.admin-login{max-width:520px;margin:70px auto}.admin-login label,.product-form label{display:grid;gap:8px;margin:14px 0}.admin-login input,.product-form input,.product-form textarea,.product-form select{width:100%;box-sizing:border-box;background:#0e1325;color:#fff;border:1px solid #2d3553;border-radius:12px;padding:12px}.product-form textarea{min-height:110px;resize:vertical}.admin-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.admin-tabs button.active{border-color:#8d6bff;color:#fff}.admin-view{display:none}.admin-view.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.span2{grid-column:1/-1}.upload-card{border:1px dashed #394366;border-radius:14px;padding:14px;background:#0b1020}.upload-line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.upload-state{font-size:12px;opacity:.78;margin-top:8px;word-break:break-all}.product-table-wrap{overflow:auto}.product-table{width:100%;border-collapse:collapse}.product-table th,.product-table td{padding:12px;border-bottom:1px solid #252d48;text-align:right;vertical-align:middle}.thumb-mini{width:70px;height:46px;object-fit:cover;border-radius:9px;background:#12182b}.status.off{opacity:.55}.note-ok{background:#0d2c22;border:1px solid #255f4b;padding:12px;border-radius:12px}.note-warn{background:#332813;border:1px solid #73561f;padding:12px;border-radius:12px}.bar{height:8px;border-radius:999px;background:#202844;overflow:hidden;margin-top:8px}.bar>i{display:block;height:100%;width:0;background:#8d6bff;transition:width .2s}.row-actions{display:flex;gap:8px;flex-wrap:wrap}.hidden{display:none!important}@media(max-width:760px){.form-grid{grid-template-columns:1fr}.span2{grid-column:auto}.upload-line{grid-template-columns:1fr}.admin-shell{padding:0 14px}}
+</style>
+</head>
+<body class="admin-body">
+<main class="admin-shell">
+<section class="admin-login panel" id="authBox">
+  <div class="brand"><div class="logo">V</div><div><b>VANTEXA</b><span>Private Admin</span></div></div>
+  <span class="eyebrow">SECURE ADMIN</span><h1>لوحة إدارة VANTEXA</h1>
+  <div class="note-warn" id="backendNote">جاري فحص اتصال لوحة الإدارة بالخادم…</div>
+  <div id="setupBox" class="hidden">
+    <h3>إعداد المدير لأول مرة</h3>
+    <label>اسم المستخدم<input id="setupUser" autocomplete="username" placeholder="admin"></label>
+    <label>كلمة المرور<input id="setupPass" type="password" autocomplete="new-password" placeholder="8 أحرف على الأقل"></label>
+    <button class="primary wide" id="setupBtn">إنشاء حساب المدير</button>
+  </div>
+  <div id="loginBox"><button class="ghost wide" type="button" id="showSetupBtn" style="margin-bottom:12px">أول تشغيل؟ إنشاء حساب المدير</button>
+    <label>اسم المستخدم<input id="loginUser" autocomplete="username" placeholder="admin"></label>
+    <label>كلمة المرور<input id="loginPass" type="password" autocomplete="current-password"></label>
+    <button class="primary wide" id="loginBtn">دخول</button>
+  </div>
+  <p id="authMsg"></p>
+</section>
+
+<section class="admin-dashboard hidden" id="dash">
+<header class="admin-head"><div class="brand"><div class="logo">V</div><div><b>VANTEXA Admin</b><span>رفع المنتجات والفيديوهات</span></div></div><button class="secondary" id="logoutBtn">خروج</button></header>
+<div class="admin-tabs"><button class="ghost active" data-tab="products">المنتجات</button><button class="ghost" data-tab="add">+ إضافة منتج</button></div>
+
+<section class="admin-view active" id="tab-products">
+<div class="panel"><div class="section-head"><div><span class="eyebrow">PRODUCTS</span><h2>المنتجات المرفوعة</h2><p>لن يظهر أي منتج للزبون إلا إذا فعلت «نشر المنتج».</p></div><button class="primary" id="refreshBtn">تحديث</button></div>
+<div class="product-table-wrap"><table class="product-table"><thead><tr><th>الصورة</th><th>المنتج</th><th>المنصة</th><th>السعر</th><th>الحالة</th><th>الإجراء</th></tr></thead><tbody id="productsBody"><tr><td colspan="6">جاري التحميل…</td></tr></tbody></table></div>
+</div>
+</section>
+
+<section class="admin-view" id="tab-add">
+<form class="panel product-form" id="productForm">
+<div class="section-head"><div><span class="eyebrow">NEW PRODUCT</span><h2 id="formTitle">إضافة بوت أو مؤشر</h2><p>ارفع ملف المنتج والفيديو والصورة، ثم احفظه مخفيًا أو انشره.</p></div></div>
+<input type="hidden" id="editId">
+<div class="form-grid">
+<label>اسم المنتج<input id="name" required placeholder="مثال: EURUSD M1 Predictor"></label>
+<label>النوع<select id="type"><option value="bot">بوت MT5</option><option value="indicator">مؤشر MT5</option><option value="signal">أداة إشارات</option></select></label>
+<label>السعر USDT<input id="price" type="number" min="0" step="0.01" required value="0"></label>
+<label>المنصة<input id="platform" placeholder="MT5"></label>
+<label>الفريم<input id="timeframe" placeholder="M1 / H1"></label>
+<label>الزوج/الأصل<input id="symbol" placeholder="EURUSD / XAUUSD"></label>
+<label class="span2">الوصف<textarea id="description" placeholder="وصف المنتج الحقيقي بعد الفحص"></textarea></label>
+<label>التقييم التقني<input id="technical_rating" placeholder="قيد التقييم"></label>
+<label class="form-check"><input id="published" type="checkbox"> نشر المنتج للزبائن بعد الحفظ</label>
+
+<div class="upload-card span2"><h3>1) ملف البوت / المؤشر</h3><div class="upload-line"><label>ZIP / EX5 / MQ5 / RAR<input id="productFile" type="file" accept=".zip,.ex5,.mq5,.rar"></label><button class="secondary" type="button" data-upload="product">رفع الملف</button></div><div class="bar"><i id="productBar"></i></div><div class="upload-state" id="productState">لم يتم الرفع</div></div>
+<div class="upload-card"><h3>2) صورة المنتج</h3><div class="upload-line"><label>PNG / JPG / WEBP<input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp"></label><button class="secondary" type="button" data-upload="image">رفع الصورة</button></div><div class="bar"><i id="imageBar"></i></div><div class="upload-state" id="imageState">لم يتم الرفع</div></div>
+<div class="upload-card"><h3>3) فيديو الإعلان</h3><div class="upload-line"><label>MP4 / WEBM<input id="videoFile" type="file" accept="video/mp4,video/webm"></label><button class="secondary" type="button" data-upload="video">رفع الفيديو</button></div><div class="bar"><i id="videoBar"></i></div><div class="upload-state" id="videoState">لم يتم الرفع</div></div>
+</div>
+<div class="cta-row"><button class="primary" type="submit" id="saveBtn">حفظ المنتج</button><button class="secondary" type="button" id="clearBtn">تفريغ الحقول</button></div>
+<div id="formMsg"></div>
+</form>
+</section>
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id); const state={file_key:'',image:'',video:'',products:[]};
+async function api(url,opt={}){const r=await fetch(url,{credentials:'same-origin',...opt});let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d.error||('HTTP '+r.status));return d}
+function msg(el,text,ok=false){el.textContent=text;el.className=ok?'note-ok':'note-warn'}
+async function boot(){
+ if(location.protocol==='file:'){msg($('backendNote'),'هذه اللوحة تحتاج رفع الموقع مع Cloudflare Functions وD1 وR2 حتى تعمل عمليات الرفع الحقيقية. الواجهة العامة تعمل محليًا، لكن الرفع لا يمكنه تخزين الملفات بأمان من ملف HTML وحده.');return}
+ try{const me=await api('/api/auth/me');if(me?.role==='admin'){showDash();return}msg($('backendNote'),'الخادم متصل. أدخل بيانات المدير.')}catch(e){msg($('backendNote'),'تعذر الاتصال بالباك-إند: '+e.message+' — بعد ربط D1/R2 ونشر Functions ستعمل اللوحة.');}
+}
+async function setup(){try{await api('/api/auth/setup',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:$('setupUser').value,password:$('setupPass').value})});msg($('authMsg'),'تم إنشاء المدير. سجل الدخول الآن.',true);$('setupBox').classList.add('hidden')}catch(e){msg($('authMsg'),e.message);if(/مسبق/.test(e.message))$('setupBox').classList.add('hidden')}}
+async function login(){try{await api('/api/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:$('loginUser').value,password:$('loginPass').value})});showDash()}catch(e){msg($('authMsg'),e.message)}}
+function showDash(){$('authBox').classList.add('hidden');$('dash').classList.remove('hidden');loadProducts()}
+async function logout(){try{await api('/api/auth/logout',{method:'POST'})}catch{}location.reload()}
+function switchTab(name){document.querySelectorAll('.admin-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.admin-view').forEach(v=>v.classList.toggle('active',v.id==='tab-'+name))}
+document.querySelectorAll('.admin-tabs button').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+async function upload(kind){const map={product:'productFile',image:'imageFile',video:'videoFile'}, f=$(map[kind]).files[0], st=$(kind+'State'), bar=$(kind+'Bar');if(!f){msg(st,'اختر ملفاً أولاً');return}bar.style.width='25%';st.textContent='جاري الرفع: '+f.name;const fd=new FormData();fd.append('kind',kind);fd.append('file',f);try{bar.style.width='60%';const d=await api('/api/admin/upload',{method:'POST',body:fd});bar.style.width='100%';if(kind==='product')state.file_key=d.key;else state[kind]=d.url;st.textContent='تم الرفع ✓ '+(d.key||d.url)}catch(e){bar.style.width='0';msg(st,e.message)}}
+document.querySelectorAll('[data-upload]').forEach(b=>b.onclick=()=>upload(b.dataset.upload));
+function data(){return{name:$('name').value.trim(),type:$('type').value,price:Number($('price').value),platform:$('platform').value.trim(),timeframe:$('timeframe').value.trim(),symbol:$('symbol').value.trim(),description:$('description').value.trim(),technical_rating:$('technical_rating').value.trim()||'قيد التقييم',published:$('published').checked,image:state.image,video:state.video,file_key:state.file_key}}
+async function save(e){e.preventDefault();const p=data();if(!p.name){msg($('formMsg'),'اكتب اسم المنتج');return}if(!p.file_key){msg($('formMsg'),'ارفع ملف المنتج قبل الحفظ');return}try{const id=$('editId').value;await api(id?'/api/admin/products/'+id:'/api/admin/products',{method:id?'PUT':'POST',headers:{'content-type':'application/json'},body:JSON.stringify(p)});msg($('formMsg'),id?'تم تحديث المنتج ✓':'تم حفظ المنتج ✓',true);clearForm();await loadProducts();switchTab('products')}catch(e){msg($('formMsg'),e.message)}}
+function clearForm(){$('productForm').reset();$('editId').value='';$('formTitle').textContent='إضافة بوت أو مؤشر';state.file_key=state.image=state.video='';['product','image','video'].forEach(k=>{$(k+'State').textContent='لم يتم الرفع';$(k+'Bar').style.width='0'});$('formMsg').textContent=''}
+async function loadProducts(){try{const a=await api('/api/admin/products');state.products=a;renderProducts()}catch(e){$('productsBody').innerHTML='<tr><td colspan="6">'+esc(e.message)+'</td></tr>'}}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function renderProducts(){const b=$('productsBody');if(!state.products.length){b.innerHTML='<tr><td colspan="6">لا توجد منتجات بعد. ابدأ بإضافة أول منتج.</td></tr>';return}b.innerHTML=state.products.map(p=>`<tr><td>${p.image?`<img class="thumb-mini" src="${esc(p.image)}" alt="">`:'—'}</td><td><b>${esc(p.name)}</b><br><small>${esc(p.type)} · ${esc(p.symbol||'')}</small></td><td>${esc(p.platform||'—')}<br><small>${esc(p.timeframe||'')}</small></td><td>${Number(p.price).toFixed(2)} USDT</td><td><span class="status ${p.published?'':'off'}">${p.published?'منشور':'مخفي'}</span></td><td><div class="row-actions"><button class="ghost" data-edit="${p.id}">تعديل</button><button class="ghost" data-del="${p.id}">حذف</button></div></td></tr>`).join('');b.querySelectorAll('[data-edit]').forEach(x=>x.onclick=()=>editProduct(Number(x.dataset.edit)));b.querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>deleteProduct(Number(x.dataset.del)))}
+function editProduct(id){const p=state.products.find(x=>x.id===id);if(!p)return;$('editId').value=p.id;$('name').value=p.name;$('type').value=p.type;$('price').value=p.price;$('platform').value=p.platform||'';$('timeframe').value=p.timeframe||'';$('symbol').value=p.symbol||'';$('description').value=p.description||'';$('technical_rating').value=p.technical_rating||'';$('published').checked=!!p.published;state.file_key=p.file_key||'';state.image=p.image||'';state.video=p.video||'';$('productState').textContent=state.file_key?'الملف الحالي: '+state.file_key:'لم يتم الرفع';$('imageState').textContent=state.image?'الصورة الحالية: '+state.image:'لم يتم الرفع';$('videoState').textContent=state.video?'الفيديو الحالي: '+state.video:'لم يتم الرفع';$('formTitle').textContent='تعديل: '+p.name;switchTab('add')}
+async function deleteProduct(id){if(!confirm('حذف المنتج من قاعدة البيانات؟'))return;try{await api('/api/admin/products/'+id,{method:'DELETE'});await loadProducts()}catch(e){alert(e.message)}}
+$('showSetupBtn').onclick=()=> $('setupBox').classList.toggle('hidden');$('setupBtn').onclick=setup;$('loginBtn').onclick=login;$('logoutBtn').onclick=logout;$('refreshBtn').onclick=loadProducts;$('productForm').onsubmit=save;$('clearBtn').onclick=clearForm;
+// لو لا يوجد مدير، زر الإعداد يظهر يدويًا لتسهيل أول تشغيل.
+$('backendNote').addEventListener('dblclick',()=>$('setupBox').classList.remove('hidden'));
+boot();
+</script>
+</body></html>
