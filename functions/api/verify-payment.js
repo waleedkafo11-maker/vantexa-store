@@ -1,7 +1,6 @@
 const USDT_TRC20_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
-// السعر الحالي للاختبار فقط.
-// لاحقاً السعر سيُقرأ من قاعدة البيانات لكل منتج.
+// سعر الاختبار الحالي
 const TEST_PRICE_USDT = 1;
 
 function json(data, status = 200) {
@@ -22,6 +21,14 @@ export async function onRequestPost(context) {
     const txid = String(body.txid || "").trim();
     const orderNo = String(body.order_no || "").trim();
 
+    // ندعم أكثر من اسم محتمل للمتغير في Cloudflare
+    const storeWallet = String(
+      env.TRC20_WALLET ||
+      env.TRC20_WALLET_ADDRESS ||
+      env["TRC20 WALLET"] ||
+      ""
+    ).trim();
+
     if (!orderNo) {
       return json({
         ok: false,
@@ -36,7 +43,7 @@ export async function onRequestPost(context) {
       }, 400);
     }
 
-    if (!env.TRC20_WALLET) {
+    if (!storeWallet) {
       return json({
         ok: false,
         error: "Store wallet is not configured"
@@ -50,7 +57,7 @@ export async function onRequestPost(context) {
       }, 500);
     }
 
-    // جدول مستقل لمنع إعادة استعمال نفس TXID.
+    // جدول لمنع استخدام نفس TXID أكثر من مرة
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS used_payment_txids (
         txid TEXT PRIMARY KEY,
@@ -113,7 +120,7 @@ export async function onRequestPost(context) {
     for (const transfer of transfers) {
       if (!transfer.result) continue;
 
-      const to = String(transfer.result.to || "");
+      const to = String(transfer.result.to || "").trim();
 
       const rawValue = String(
         transfer.result.value ??
@@ -124,7 +131,7 @@ export async function onRequestPost(context) {
       const amount = Number(rawValue) / 1000000;
 
       if (
-        to === env.TRC20_WALLET &&
+        to === storeWallet &&
         Number.isFinite(amount) &&
         amount >= TEST_PRICE_USDT
       ) {
@@ -141,7 +148,7 @@ export async function onRequestPost(context) {
       }, 400);
     }
 
-    // نسجل TXID بعد نجاح التحقق فقط.
+    // تسجيل TXID بعد نجاح التحقق فقط
     try {
       await env.DB.prepare(`
         INSERT INTO used_payment_txids
@@ -152,8 +159,8 @@ export async function onRequestPost(context) {
         orderNo,
         receivedAmount
       ).run();
+
     } catch (e) {
-      // حماية إضافية لو حصل طلبان بنفس TXID في نفس اللحظة.
       return json({
         ok: false,
         error: "This TXID has already been used"
@@ -164,7 +171,7 @@ export async function onRequestPost(context) {
       ok: true,
       paid: true,
       order_no: orderNo,
-      txid: txid,
+      txid,
       amount: receivedAmount,
       message: "Payment confirmed successfully"
     });
