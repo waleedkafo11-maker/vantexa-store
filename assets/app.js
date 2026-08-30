@@ -302,7 +302,7 @@ function updateCheckout(p){
   document.getElementById('checkoutTotal').textContent=p.price+' USDT';
 
   document.querySelectorAll('#page-payment .amount').forEach(am=>{
-    am.textContent=Number(p.price).toFixed(4)+' USDT';
+    am.textContent=Number(p.price).toFixed(0)+' USDT';
   });
 }
 
