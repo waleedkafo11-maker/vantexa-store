@@ -1,5 +1,5 @@
 const USDT_TRC20_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
-const TEST_PRICE_USDT = 1;
+const TEST_PRICE_USDT = 2;
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
