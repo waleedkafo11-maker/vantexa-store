@@ -1,6 +1,4 @@
 const USDT_TRC20_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
-
-// سعر الاختبار الحالي
 const TEST_PRICE_USDT = 1;
 
 function json(data, status = 200) {
@@ -21,14 +19,6 @@ export async function onRequestPost(context) {
     const txid = String(body.txid || "").trim();
     const orderNo = String(body.order_no || "").trim();
 
-    // ندعم أكثر من اسم محتمل للمتغير في Cloudflare
-    const storeWallet = String(
-      env.TRC20_WALLET ||
-      env.TRC20_WALLET_ADDRESS ||
-      env["TRC20 WALLET"] ||
-      ""
-    ).trim();
-
     if (!orderNo) {
       return json({
         ok: false,
@@ -43,7 +33,19 @@ export async function onRequestPost(context) {
       }, 400);
     }
 
-    if (!storeWallet) {
+    /*
+      Cloudflare wallet variable.
+      Supports both names so we don't get blocked
+      by a variable-name mismatch.
+    */
+    const STORE_WALLET =
+      String(
+        env.TRC20_WALLET ||
+        env.TRC20_WALLET_ADDRESS ||
+        ""
+      ).trim();
+
+    if (!STORE_WALLET) {
       return json({
         ok: false,
         error: "Store wallet is not configured"
@@ -57,7 +59,7 @@ export async function onRequestPost(context) {
       }, 500);
     }
 
-    // جدول لمنع استخدام نفس TXID أكثر من مرة
+    // Create a small table used only to prevent TXID reuse.
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS used_payment_txids (
         txid TEXT PRIMARY KEY,
@@ -79,7 +81,7 @@ export async function onRequestPost(context) {
     }
 
     const headers = {
-      accept: "application/json"
+      "accept": "application/json"
     };
 
     if (env.TRONGRID_API_KEY) {
@@ -91,7 +93,10 @@ export async function onRequestPost(context) {
       encodeURIComponent(txid) +
       "/events?only_confirmed=true";
 
-    const response = await fetch(url, { headers });
+    const response = await fetch(url, {
+      method: "GET",
+      headers
+    });
 
     if (!response.ok) {
       return json({
@@ -101,41 +106,54 @@ export async function onRequestPost(context) {
     }
 
     const result = await response.json();
-    const events = Array.isArray(result.data) ? result.data : [];
 
-    const transfers = events.filter((event) => {
-      if (event.event_name !== "Transfer") return false;
-
-      const contract =
-        event.contract_address ||
-        event.contract ||
-        "";
-
-      return contract === USDT_TRC20_CONTRACT;
-    });
+    const events =
+      Array.isArray(result.data)
+        ? result.data
+        : [];
 
     let validTransfer = null;
     let receivedAmount = 0;
 
-    for (const transfer of transfers) {
-      if (!transfer.result) continue;
+    for (const event of events) {
+      if (event.event_name !== "Transfer") {
+        continue;
+      }
 
-      const to = String(transfer.result.to || "").trim();
+      const contract =
+        String(
+          event.contract_address ||
+          event.contract ||
+          ""
+        ).trim();
 
-      const rawValue = String(
-        transfer.result.value ??
-        transfer.result._value ??
-        ""
-      );
+      if (contract !== USDT_TRC20_CONTRACT) {
+        continue;
+      }
 
-      const amount = Number(rawValue) / 1000000;
+      if (!event.result) {
+        continue;
+      }
+
+      const to =
+        String(event.result.to || "").trim();
+
+      const rawValue =
+        String(
+          event.result.value ??
+          event.result._value ??
+          ""
+        );
+
+      const amount =
+        Number(rawValue) / 1000000;
 
       if (
-        to === storeWallet &&
+        to === STORE_WALLET &&
         Number.isFinite(amount) &&
         amount >= TEST_PRICE_USDT
       ) {
-        validTransfer = transfer;
+        validTransfer = event;
         receivedAmount = amount;
         break;
       }
@@ -148,7 +166,7 @@ export async function onRequestPost(context) {
       }, 400);
     }
 
-    // تسجيل TXID بعد نجاح التحقق فقط
+    // Register TXID only after successful verification.
     try {
       await env.DB.prepare(`
         INSERT INTO used_payment_txids
