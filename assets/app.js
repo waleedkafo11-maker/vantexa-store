@@ -492,7 +492,7 @@ payCards.forEach(c=>{
 
 document.getElementById('copyWallet').onclick=()=>{
 
-  const t='TFqfLD7Lz5jbGbrsFiXkZVzjkRUWxYgJzq';
+  const t='TCQsnoXAkYGJwXWu3ASF2Mz4DRcSNodtXy';
 
   if(navigator.clipboard){
     navigator.clipboard.writeText(t);
