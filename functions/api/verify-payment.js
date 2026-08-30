@@ -1,12 +1,8 @@
 const USDT_TRC20_CONTRACT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t";
 
-const PRODUCTS = {
-  "sniper-real": {
-    name: "Sniper Real Predictor",
-    price: 1,
-    download: "/Sniper_Real_Predictor_VANTEXA.zip"
-  }
-};
+// السعر الحالي للاختبار فقط.
+// لاحقاً السعر سيُقرأ من قاعدة البيانات لكل منتج.
+const TEST_PRICE_USDT = 1;
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -24,32 +20,55 @@ export async function onRequestPost(context) {
     const body = await request.json();
 
     const txid = String(body.txid || "").trim();
-    const productKey = String(body.product_key || "").trim();
     const orderNo = String(body.order_no || "").trim();
-    const customerName = String(body.name || "").trim();
-    const customerEmail = String(body.email || "").trim();
 
-    const product = PRODUCTS[productKey];
-
-    if (!product) {
+    if (!orderNo) {
       return json({
         ok: false,
-        message: "المنتج غير صحيح"
+        error: "Order number is missing"
       }, 400);
     }
 
     if (!/^[a-fA-F0-9]{64}$/.test(txid)) {
       return json({
         ok: false,
-        message: "TXID غير صحيح"
+        error: "Enter a valid 64-character TXID"
       }, 400);
     }
 
     if (!env.TRC20_WALLET) {
       return json({
         ok: false,
-        message: "محفظة المتجر غير مضبوطة"
+        error: "Store wallet is not configured"
       }, 500);
+    }
+
+    if (!env.DB) {
+      return json({
+        ok: false,
+        error: "Database is not connected"
+      }, 500);
+    }
+
+    // جدول مستقل لمنع إعادة استعمال نفس TXID.
+    await env.DB.prepare(`
+      CREATE TABLE IF NOT EXISTS used_payment_txids (
+        txid TEXT PRIMARY KEY,
+        order_no TEXT NOT NULL,
+        amount REAL NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run();
+
+    const alreadyUsed = await env.DB.prepare(
+      "SELECT txid FROM used_payment_txids WHERE txid = ? LIMIT 1"
+    ).bind(txid).first();
+
+    if (alreadyUsed) {
+      return json({
+        ok: false,
+        error: "This TXID has already been used"
+      }, 409);
     }
 
     const headers = {
@@ -63,21 +82,21 @@ export async function onRequestPost(context) {
     const url =
       "https://api.trongrid.io/v1/transactions/" +
       encodeURIComponent(txid) +
-      "/events";
+      "/events?only_confirmed=true";
 
     const response = await fetch(url, { headers });
 
     if (!response.ok) {
       return json({
         ok: false,
-        message: "تعذر التحقق من شبكة TRON"
+        error: "Unable to verify payment on TRON"
       }, 502);
     }
 
     const result = await response.json();
     const events = Array.isArray(result.data) ? result.data : [];
 
-    const transfer = events.find((event) => {
+    const transfers = events.filter((event) => {
       if (event.event_name !== "Transfer") return false;
 
       const contract =
@@ -88,68 +107,72 @@ export async function onRequestPost(context) {
       return contract === USDT_TRC20_CONTRACT;
     });
 
-    if (!transfer || !transfer.result) {
+    let validTransfer = null;
+    let receivedAmount = 0;
+
+    for (const transfer of transfers) {
+      if (!transfer.result) continue;
+
+      const to = String(transfer.result.to || "");
+
+      const rawValue = String(
+        transfer.result.value ??
+        transfer.result._value ??
+        ""
+      );
+
+      const amount = Number(rawValue) / 1000000;
+
+      if (
+        to === env.TRC20_WALLET &&
+        Number.isFinite(amount) &&
+        amount >= TEST_PRICE_USDT
+      ) {
+        validTransfer = transfer;
+        receivedAmount = amount;
+        break;
+      }
+    }
+
+    if (!validTransfer) {
       return json({
         ok: false,
-        message: "لم يتم العثور على تحويل USDT مطابق"
+        error: "No confirmed matching USDT payment was found"
       }, 400);
     }
 
-    const to = String(transfer.result.to || "");
-
-    const rawValue = String(
-      transfer.result.value ??
-      transfer.result._value ??
-      ""
-    );
-
-    const amount = Number(rawValue) / 1000000;
-
-    if (!Number.isFinite(amount)) {
+    // نسجل TXID بعد نجاح التحقق فقط.
+    try {
+      await env.DB.prepare(`
+        INSERT INTO used_payment_txids
+        (txid, order_no, amount)
+        VALUES (?, ?, ?)
+      `).bind(
+        txid,
+        orderNo,
+        receivedAmount
+      ).run();
+    } catch (e) {
+      // حماية إضافية لو حصل طلبان بنفس TXID في نفس اللحظة.
       return json({
         ok: false,
-        message: "تعذر قراءة قيمة التحويل"
-      }, 400);
-    }
-
-    if (to !== env.TRC20_WALLET) {
-      return json({
-        ok: false,
-        message: "التحويل ليس إلى محفظة VANTEXA"
-      }, 400);
-    }
-
-    if (Math.abs(amount - product.price) > 0.000001) {
-      return json({
-        ok: false,
-        message: "قيمة التحويل لا تطابق سعر المنتج",
-        received_amount: amount,
-        expected_amount: product.price
-      }, 400);
+        error: "This TXID has already been used"
+      }, 409);
     }
 
     return json({
       ok: true,
       paid: true,
       order_no: orderNo,
-      txid,
-      amount,
-      customer: {
-        name: customerName,
-        email: customerEmail
-      },
-      product: {
-        key: productKey,
-        name: product.name
-      },
-      download: product.download,
-      message: "تم التحقق من الدفع بنجاح"
+      txid: txid,
+      amount: receivedAmount,
+      message: "Payment confirmed successfully"
     });
 
   } catch (error) {
     return json({
       ok: false,
-      message: "حدث خطأ أثناء التحقق من الدفع"
+      error: "Verification failed"
     }, 500);
   }
 }
