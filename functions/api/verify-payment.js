@@ -33,11 +33,6 @@ export async function onRequestPost(context) {
       }, 400);
     }
 
-    /*
-      Cloudflare wallet variable.
-      Supports both names so we don't get blocked
-      by a variable-name mismatch.
-    */
     const STORE_WALLET =
       String(
         env.TRC20_WALLET ||
@@ -59,7 +54,6 @@ export async function onRequestPost(context) {
       }, 500);
     }
 
-    // Create a small table used only to prevent TXID reuse.
     await env.DB.prepare(`
       CREATE TABLE IF NOT EXISTS used_payment_txids (
         txid TEXT PRIMARY KEY,
@@ -166,7 +160,6 @@ export async function onRequestPost(context) {
       }, 400);
     }
 
-    // Register TXID only after successful verification.
     try {
       await env.DB.prepare(`
         INSERT INTO used_payment_txids
@@ -183,6 +176,32 @@ export async function onRequestPost(context) {
         ok: false,
         error: "This TXID has already been used"
       }, 409);
+    }
+
+    // إرسال إشعار البيع إلى إيميل VANTEXA
+    try {
+      if (env.RESEND_API_KEY && env.SALES_EMAIL) {
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            from: "VANTEXA <onboarding@resend.dev>",
+            to: [env.SALES_EMAIL],
+            subject: `VANTEXA - New Sale ${orderNo}`,
+            text:
+              `New VANTEXA Sale\n\n` +
+              `Order: ${orderNo}\n` +
+              `Amount: ${receivedAmount} USDT\n` +
+              `TXID: ${txid}\n\n` +
+              `Payment confirmed successfully.`
+          })
+        });
+      }
+    } catch (emailError) {
+      console.log("Email notification failed");
     }
 
     return json({
